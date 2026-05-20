@@ -12,7 +12,8 @@ palette.
 ### Forum index
 
 Animated aurora backdrop, glassmorphic discussion cards, gradient text on unread titles,
-and a glowing pill for unread counts.
+a glowing pill for unread counts, stat widgets inside the welcome hero, and the
+user-facing palette picker popover (shown open).
 
 ![Forum index](screenshots/forum-index.png)
 
@@ -34,6 +35,11 @@ background animation.
 
 - **Animated aurora backdrop** — drifting radial gradients in violet, cyan,
   teal, pink, and magenta on a deep night-sky base.
+- **User palette picker** — a circular gradient button in the header opens a
+  popover with six presets (Aurora, Sunset, Ocean, Forest, Nebula, Ember).
+  Choice persists per-visitor via `localStorage` and applies instantly.
+- **Hero widgets** — Members, Discussions, Posts, and Online-now stat tiles
+  embedded inside the welcome hero, with live trend lines.
 - **Glassmorphic surfaces** — frosted header, sidebar, discussion cards,
   composer, modals, and dropdowns.
 - **Gradient buttons & badges** — primary buttons shimmer; unread counts pulse
@@ -44,6 +50,19 @@ background animation.
 - **Configurable** — admin settings for gradient colors, accent color, and
   toggles for glassmorphism, glow, and background animation.
 - **Accessible** — honors `prefers-reduced-motion`, visible focus rings.
+
+## Palette presets
+
+| Preset  | Gradient                                                 |
+| ------- | -------------------------------------------------------- |
+| Aurora  | `#7c3aed` → `#4f46e5` → `#22d3ee` → `#14b8a6` *(default)* |
+| Sunset  | `#f97316` → `#f43f5e` → `#d946ef` → `#7c3aed`            |
+| Ocean   | `#1e40af` → `#3b82f6` → `#06b6d4` → `#22d3ee`            |
+| Forest  | `#15803d` → `#10b981` → `#22d3ee` → `#0ea5e9`            |
+| Nebula  | `#a855f7` → `#d946ef` → `#6366f1` → `#3b82f6`            |
+| Ember   | `#b91c1c` → `#ea580c` → `#f59e0b` → `#fbbf24`            |
+
+Add or override a preset by extending `PALETTES` in `js/src/forum/palettes.js`.
 
 ## Installation
 
@@ -88,10 +107,13 @@ less/
   mixins.less           .aurora-glass, .aurora-text-gradient, ...
   animations.less       drift, shimmer, pulse, float, fade-up
 js/
-  forum.js, admin.js    Webpack entry points
-  src/forum/index.js    Frontend: settings, scroll header, ripple
-  src/admin/index.js    Admin: registers settings
-  dist/                 Compiled bundles (committed)
+  forum.js, admin.js          Webpack entry points
+  src/forum/index.js          Frontend bootstrap: settings, scroll header, ripple
+  src/forum/palettes.js       Palette presets + apply/load/store helpers
+  src/forum/palette-picker.js Header button + popover injection
+  src/forum/hero-widgets.js   Welcome-hero stat tiles
+  src/admin/index.js          Admin: registers settings
+  dist/                       Compiled bundles (committed)
 resources/locale/
   en.yml                English admin strings
 ```

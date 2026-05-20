@@ -1,32 +1,40 @@
-import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
+import { applyPalette, loadStoredPalette } from './palettes';
+import { installPalettePicker } from './palette-picker';
+import { installHeroWidgets } from './hero-widgets';
+
+// Apply the stored palette as early as possible so the page never flashes
+// the default colors before the user's choice is restored.
+applyPalette(loadStoredPalette());
 
 app.initializers.add('ernestdefoe/flarum-aurora-theme', () => {
     applyThemeVariables();
+
+    // Re-apply on every page render in case Flarum tears down the header.
+    const install = () => {
+        installPalettePicker();
+        installHeroWidgets(app);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', install);
+    } else {
+        install();
+    }
+
     enableScrollAwareHeader();
     enableRippleButtons();
 });
 
 function applyThemeVariables() {
     const settings = app.forum.data.attributes;
-    const root = document.documentElement;
-
-    const start = settings['aurora-theme.primary_gradient_start'];
-    const end = settings['aurora-theme.primary_gradient_end'];
-    const accent = settings['aurora-theme.accent_color'];
-
-    if (start) root.style.setProperty('--aurora-gradient-start', start);
-    if (end) root.style.setProperty('--aurora-gradient-end', end);
-    if (accent) root.style.setProperty('--aurora-accent', accent);
 
     if (settings['aurora-theme.animate_background'] === false) {
         document.body.classList.add('aurora-no-animation');
     }
-
     if (settings['aurora-theme.enable_glassmorphism'] === false) {
         document.body.classList.add('aurora-no-glass');
     }
-
     if (settings['aurora-theme.enable_glow'] === false) {
         document.body.classList.add('aurora-no-glow');
     }

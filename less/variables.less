@@ -24,12 +24,34 @@
 @aurora-text-muted:     #9aa3c7;
 @aurora-text-dim:       #6b7299;
 
-@aurora-gradient:       linear-gradient(120deg, @aurora-violet 0%, @aurora-indigo 35%, @aurora-cyan 70%, @aurora-teal 100%);
+// Default static gradient (used when CSS custom property is unsupported).
+@aurora-gradient-static: linear-gradient(120deg, @aurora-violet 0%, @aurora-indigo 35%, @aurora-cyan 70%, @aurora-teal 100%);
+
+// Runtime-swappable via the palette picker (see :root block below).
+@aurora-gradient:       ~"var(--aurora-gradient)";
 @aurora-gradient-soft:  linear-gradient(120deg, fade(@aurora-violet, 70%) 0%, fade(@aurora-cyan, 70%) 100%);
 @aurora-gradient-warm:  linear-gradient(120deg, @aurora-pink 0%, @aurora-magenta 50%, @aurora-violet 100%);
 
 @aurora-glow-cool:      0 0 24px fade(@aurora-cyan, 35%), 0 0 48px fade(@aurora-violet, 25%);
 @aurora-glow-warm:      0 0 24px fade(@aurora-pink, 35%), 0 0 48px fade(@aurora-magenta, 25%);
+
+// CSS custom properties — swappable at runtime by the palette picker.
+// LESS vars above are static fallbacks for compilers and tooling.
+:root {
+    --aurora-c1: @aurora-violet;
+    --aurora-c2: @aurora-indigo;
+    --aurora-c3: @aurora-cyan;
+    --aurora-c4: @aurora-teal;
+    --aurora-accent: @aurora-pink;
+
+    --aurora-blob-1: fade(@aurora-violet, 70%);
+    --aurora-blob-2: fade(@aurora-cyan, 60%);
+    --aurora-blob-3: fade(@aurora-magenta, 55%);
+    --aurora-blob-4: fade(@aurora-teal, 55%);
+    --aurora-blob-5: fade(@aurora-pink, 50%);
+
+    --aurora-gradient: linear-gradient(120deg, var(--aurora-c1) 0%, var(--aurora-c2) 35%, var(--aurora-c3) 70%, var(--aurora-c4) 100%);
+}
 
 @aurora-radius-sm: 8px;
 @aurora-radius-md: 14px;

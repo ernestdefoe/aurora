@@ -7,3 +7,18 @@ ernestdefoe-flarum-aurora-theme:
       glassmorphism: "Enable glassmorphism (frosted panels)"
       glow: "Enable glow effects"
       animate_background: "Animate aurora background"
+  forum:
+    palette:
+      button_label: "Choose color palette"
+      title: "Color palette"
+      aurora: "Aurora"
+      sunset: "Sunset"
+      ocean: "Ocean"
+      forest: "Forest"
+      nebula: "Nebula"
+      ember: "Ember"
+    widgets:
+      members: "Members"
+      discussions: "Discussions"
+      posts: "Posts"
+      online: "Online now"
