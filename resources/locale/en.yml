@@ -1,0 +1,9 @@
+ernestdefoe-flarum-aurora-theme:
+  admin:
+    settings:
+      gradient_start: "Primary gradient — start color"
+      gradient_end: "Primary gradient — end color"
+      accent_color: "Accent color"
+      glassmorphism: "Enable glassmorphism (frosted panels)"
+      glow: "Enable glow effects"
+      animate_background: "Animate aurora background"
