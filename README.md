@@ -7,6 +7,29 @@ palette.
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Flarum](https://img.shields.io/badge/Flarum-%5E1.8.0-orange.svg)
 
+## Screenshots
+
+### Forum index
+
+Animated aurora backdrop, glassmorphic discussion cards, gradient text on unread titles,
+and a glowing pill for unread counts.
+
+![Forum index](screenshots/forum-index.png)
+
+### Discussion view
+
+Glassy posts with gradient usernames, accent-bordered blockquotes, themed inline code
+and code blocks, and gradient-glow avatars.
+
+![Discussion view](screenshots/discussion.png)
+
+### Admin settings
+
+Live color swatches, a gradient preview, and toggles for glassmorphism, glow, and
+background animation.
+
+![Admin settings](screenshots/admin-settings.png)
+
 ## Highlights
 
 - **Animated aurora backdrop** — drifting radial gradients in violet, cyan,
