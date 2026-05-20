@@ -5,7 +5,11 @@ gradient backdrops, glassmorphic panels, glowing accents, and a dark night-sky
 palette.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Flarum](https://img.shields.io/badge/Flarum-%5E1.8.0-orange.svg)
+![Flarum](https://img.shields.io/badge/Flarum-%5E2.0-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-%5E8.3-777bb4.svg)
+
+> **Flarum 1.x users:** this branch targets Flarum 2.0. For Flarum 1.8.x see the
+> [`1.x`](https://github.com/ernestdefoe/flarum-aurora-theme/tree/1.x) branch.
 
 ## Screenshots
 
@@ -112,7 +116,8 @@ js/
   src/forum/palettes.js       Palette presets + apply/load/store helpers
   src/forum/palette-picker.js Header button + popover injection
   src/forum/hero-widgets.js   Welcome-hero stat tiles
-  src/admin/index.js          Admin: registers settings
+  src/admin/index.js          Admin entrypoint (re-exports extend)
+  src/admin/extend.js         Flarum 2 Admin extender — settings registry
   dist/                       Compiled bundles (committed)
 resources/locale/
   en.yml                English admin strings
@@ -120,9 +125,14 @@ resources/locale/
 
 ## Compatibility
 
-- Flarum core `^1.8.0`
+- Flarum core `^2.0.0-beta` (built against `2.0.0-rc.1`)
+- PHP `^8.3`
 - Modern browsers with `backdrop-filter` support. Older browsers gracefully
   degrade to solid dark surfaces.
+
+Need Flarum 1.x? Switch to the [`1.x`](https://github.com/ernestdefoe/flarum-aurora-theme/tree/1.x)
+branch — it targets `flarum/core ^1.8.0` and uses the legacy `app.extensionData`
+settings API.
 
 ## License
 
