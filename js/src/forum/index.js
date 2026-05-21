@@ -27,15 +27,18 @@ app.initializers.add('ernestdefoe/aurora', () => {
 });
 
 function applyThemeVariables() {
-    const settings = app.forum.data.attributes;
+    // app.forum may not be hydrated yet on first boot — guard defensively.
+    const get = (key) => (app && app.forum && typeof app.forum.attribute === 'function')
+        ? app.forum.attribute(key)
+        : undefined;
 
-    if (settings['aurora-theme.animate_background'] === false) {
+    if (get('aurora-theme.animate_background') === false) {
         document.body.classList.add('aurora-no-animation');
     }
-    if (settings['aurora-theme.enable_glassmorphism'] === false) {
+    if (get('aurora-theme.enable_glassmorphism') === false) {
         document.body.classList.add('aurora-no-glass');
     }
-    if (settings['aurora-theme.enable_glow'] === false) {
+    if (get('aurora-theme.enable_glow') === false) {
         document.body.classList.add('aurora-no-glow');
     }
 }
