@@ -2,11 +2,13 @@
 // Aurora Theme — mixins
 // =====================================================================
 
+// Glass tint is sourced from a CSS variable so it swaps between dark and
+// light themes (deep indigo in dark, white in light) without recompiling.
 .aurora-glass(@blur: @aurora-blur, @opacity: 0.6) {
-    background: fade(@aurora-night-2, (@opacity * 100));
+    background: rgba(var(--aurora-glass-rgb), @opacity);
     backdrop-filter: blur(@blur) saturate(160%);
     -webkit-backdrop-filter: blur(@blur) saturate(160%);
-    border: 1px solid @aurora-mist-1;
+    border: 1px solid var(--aurora-mist-1);
 }
 
 .aurora-card {
@@ -49,9 +51,11 @@
             color: transparent;
 }
 
+// Focus ring uses the active surface color as its inner halo so the
+// ring stays visible against either theme.
 .aurora-focus-ring {
     outline: none;
     box-shadow:
-        0 0 0 2px @aurora-night-0,
+        0 0 0 2px var(--aurora-surface-0),
         0 0 0 4px fade(@aurora-cyan, 60%);
 }
