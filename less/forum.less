@@ -675,6 +675,51 @@ textarea {
         border-color: var(--aurora-mist-3);
         box-shadow: @aurora-glow-cool;
     }
+
+    // Desktop default: keep the button a compact gradient circle in
+    // HeaderSecondary. The label is still in the DOM for assistive tech
+    // and is reused by the mobile drawer override below.
+    &-label {
+        display: none;
+    }
+}
+
+// In the mobile slide-out drawer (.App-drawer), Flarum re-renders
+// HeaderSecondary items vertically alongside Search / Sign Up / Log In.
+// Without this override the palette button would be a tiny circle
+// floating in an empty 248px row. Convert it to a full-width labeled
+// menu row to match the surrounding items.
+.App-drawer .AuroraPaletteButton {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 16px;
+    gap: 10px;
+
+    &::before {
+        // Shrink the gradient swatch slightly so it visually weighs the
+        // same as the moon/sun icon used by the theme-toggle row.
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        box-shadow: none;
+    }
+
+    &-label {
+        display: inline;
+        font-weight: 500;
+    }
+
+    &:hover {
+        transform: none;
+        box-shadow: none;
+        background: var(--aurora-mist-1);
+    }
 }
 
 .AuroraPalettePopover {
