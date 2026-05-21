@@ -14,6 +14,14 @@ export function installPalettePicker() {
     button.setAttribute('aria-label', 'Choose color palette');
     button.setAttribute('aria-expanded', 'false');
 
+    // Visible text label for the mobile slide-out drawer (hidden by CSS
+    // on desktop where the button stays as a compact gradient circle).
+    // Sits inside the button so the click target / focus ring covers it.
+    const label = document.createElement('span');
+    label.className = 'AuroraPaletteButton-label';
+    label.textContent = 'Palette';
+    button.appendChild(label);
+
     let popover = null;
 
     const close = () => {
