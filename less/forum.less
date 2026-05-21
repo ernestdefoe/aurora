@@ -11,8 +11,8 @@
 // ---------------------------------------------------------------------
 
 body {
-    color: @aurora-text;
-    background: @aurora-night-0;
+    color: var(--aurora-text);
+    background: var(--aurora-surface-0);
     position: relative;
     min-height: 100vh;
 
@@ -25,6 +25,9 @@ body {
         pointer-events: none;
         filter: blur(80px);
         will-change: transform, opacity;
+        // Light mode dims the blobs so the gradient haze tints the
+        // bright surface rather than overwhelming it.
+        opacity: var(--aurora-blob-opacity, 1);
     }
 
     &::before {
@@ -75,7 +78,7 @@ a {
 }
 
 h1, h2, h3, h4 {
-    color: @aurora-text;
+    color: var(--aurora-text);
     letter-spacing: -0.01em;
 }
 
@@ -85,14 +88,14 @@ h1, h2, h3, h4 {
 
 .App-header {
     .aurora-glass(@aurora-blur-lg, 0.55);
-    border-bottom: 1px solid @aurora-mist-2;
+    border-bottom: 1px solid var(--aurora-mist-2);
     box-shadow: 0 8px 32px -16px fade(#000, 80%);
     transition: background 0.4s @aurora-ease;
 }
 
 .Header-title,
 .Header-logo {
-    color: @aurora-text;
+    color: var(--aurora-text);
 }
 
 .Header-title {
@@ -104,14 +107,14 @@ h1, h2, h3, h4 {
 .Header-controls {
     .Button {
         background: transparent;
-        color: @aurora-text;
+        color: var(--aurora-text);
         border: 1px solid transparent;
         transition: all 0.2s @aurora-ease;
 
         &:hover,
         &:focus {
-            background: @aurora-mist-1;
-            border-color: @aurora-mist-2;
+            background: var(--aurora-mist-1);
+            border-color: var(--aurora-mist-2);
             color: #fff;
         }
     }
@@ -133,20 +136,20 @@ h1, h2, h3, h4 {
     .Button,
     .NavItem {
         background: transparent;
-        color: @aurora-text-muted;
+        color: var(--aurora-text-muted);
         border-radius: @aurora-radius-md;
         transition: all 0.2s @aurora-ease;
         position: relative;
         overflow: hidden;
 
         .icon {
-            color: @aurora-text-muted;
+            color: var(--aurora-text-muted);
             transition: color 0.2s @aurora-ease;
         }
 
         &:hover {
-            background: @aurora-mist-1;
-            color: @aurora-text;
+            background: var(--aurora-mist-1);
+            color: var(--aurora-text);
             transform: translateX(2px);
 
             .icon { color: @aurora-cyan; }
@@ -154,7 +157,7 @@ h1, h2, h3, h4 {
 
         &.active,
         &--active {
-            background: @aurora-mist-2;
+            background: var(--aurora-mist-2);
             color: #fff;
 
             .icon { color: @aurora-cyan; }
@@ -185,7 +188,7 @@ h1, h2, h3, h4 {
 
 .DiscussionListItem {
     .aurora-glass(@aurora-blur, 0.35);
-    border: 1px solid @aurora-mist-1;
+    border: 1px solid var(--aurora-mist-1);
     border-radius: @aurora-radius-md;
     margin-bottom: 10px;
     padding: 14px 18px;
@@ -194,15 +197,15 @@ h1, h2, h3, h4 {
 
     &:hover {
         transform: translateY(-2px);
-        background: fade(@aurora-night-2, 70%);
-        border-color: @aurora-mist-3;
+        background: rgba(var(--aurora-surface-2-rgb), 0.7);
+        border-color: var(--aurora-mist-3);
         box-shadow:
             0 12px 28px -12px fade(#000, 60%),
             0 0 0 1px fade(@aurora-cyan, 25%);
     }
 
     &-title {
-        color: @aurora-text;
+        color: var(--aurora-text);
         font-weight: 600;
 
         &.unread {
@@ -212,7 +215,7 @@ h1, h2, h3, h4 {
 
     &-info,
     &-count {
-        color: @aurora-text-muted;
+        color: var(--aurora-text-muted);
     }
 
     &-count.unread {
@@ -231,17 +234,17 @@ h1, h2, h3, h4 {
 
 .Button {
     border-radius: @aurora-radius-md;
-    border: 1px solid @aurora-mist-2;
-    background: @aurora-mist-1;
-    color: @aurora-text;
+    border: 1px solid var(--aurora-mist-2);
+    background: var(--aurora-mist-1);
+    color: var(--aurora-text);
     transition: all 0.2s @aurora-ease;
     font-weight: 500;
 
     &:hover,
     &:focus {
-        background: @aurora-mist-2;
+        background: var(--aurora-mist-2);
         color: #fff;
-        border-color: @aurora-mist-3;
+        border-color: var(--aurora-mist-3);
         transform: translateY(-1px);
     }
 
@@ -271,7 +274,7 @@ h1, h2, h3, h4 {
         border-color: transparent;
 
         &:hover {
-            background: @aurora-mist-1;
+            background: var(--aurora-mist-1);
         }
     }
 
@@ -287,7 +290,7 @@ h1, h2, h3, h4 {
 .PostStream {
     .Post {
         .aurora-glass(@aurora-blur, 0.4);
-        border: 1px solid @aurora-mist-1;
+        border: 1px solid var(--aurora-mist-1);
         border-radius: @aurora-radius-lg;
         padding: 22px 26px;
         margin-bottom: 18px;
@@ -295,16 +298,16 @@ h1, h2, h3, h4 {
         animation: aurora-fade-up 0.45s @aurora-ease both;
 
         &:hover {
-            border-color: @aurora-mist-3;
+            border-color: var(--aurora-mist-3);
         }
 
         &-header,
         &-footer {
-            color: @aurora-text-muted;
+            color: var(--aurora-text-muted);
         }
 
         &-body {
-            color: @aurora-text;
+            color: var(--aurora-text);
             line-height: 1.65;
 
             a {
@@ -315,16 +318,16 @@ h1, h2, h3, h4 {
             }
 
             blockquote {
-                background: @aurora-mist-1;
+                background: var(--aurora-mist-1);
                 border-left: 3px solid;
                 border-image: @aurora-gradient 1;
                 border-radius: 0 @aurora-radius-sm @aurora-radius-sm 0;
                 padding: 12px 16px;
-                color: @aurora-text-muted;
+                color: var(--aurora-text-muted);
             }
 
             code {
-                background: @aurora-night-3;
+                background: var(--aurora-surface-3);
                 color: @aurora-amber;
                 padding: 2px 6px;
                 border-radius: @aurora-radius-sm;
@@ -332,15 +335,15 @@ h1, h2, h3, h4 {
             }
 
             pre {
-                background: @aurora-night-1;
-                border: 1px solid @aurora-mist-1;
+                background: var(--aurora-surface-1);
+                border: 1px solid var(--aurora-mist-1);
                 border-radius: @aurora-radius-md;
                 padding: 14px 16px;
                 overflow-x: auto;
 
                 code {
                     background: transparent;
-                    color: @aurora-text;
+                    color: var(--aurora-text);
                     padding: 0;
                 }
             }
@@ -360,14 +363,14 @@ h1, h2, h3, h4 {
 
 .Avatar {
     box-shadow:
-        0 0 0 2px @aurora-night-1,
+        0 0 0 2px var(--aurora-surface-1),
         0 0 0 3px fade(@aurora-cyan, 35%);
     transition: box-shadow 0.25s @aurora-ease, transform 0.25s @aurora-ease;
 
     &:hover {
         transform: scale(1.04);
         box-shadow:
-            0 0 0 2px @aurora-night-1,
+            0 0 0 2px var(--aurora-surface-1),
             0 0 0 3px fade(@aurora-pink, 60%),
             @aurora-glow-warm;
     }
@@ -379,20 +382,20 @@ h1, h2, h3, h4 {
 
 .Composer {
     .aurora-glass(@aurora-blur-lg, 0.7);
-    border-top: 1px solid @aurora-mist-2;
+    border-top: 1px solid var(--aurora-mist-2);
     box-shadow: 0 -16px 48px -20px fade(#000, 80%);
 
     &-header,
     &-footer {
         background: transparent;
-        color: @aurora-text;
+        color: var(--aurora-text);
     }
 
     .TextEditor textarea,
     .TextEditor [contenteditable] {
-        background: @aurora-night-1;
-        color: @aurora-text;
-        border: 1px solid @aurora-mist-2;
+        background: var(--aurora-surface-1);
+        color: var(--aurora-text);
+        border: 1px solid var(--aurora-mist-2);
         border-radius: @aurora-radius-md;
 
         &:focus {
@@ -412,14 +415,14 @@ input[type="email"],
 input[type="password"],
 input[type="search"],
 textarea {
-    background: @aurora-night-1;
-    color: @aurora-text;
-    border: 1px solid @aurora-mist-2;
+    background: var(--aurora-surface-1);
+    color: var(--aurora-text);
+    border: 1px solid var(--aurora-mist-2);
     border-radius: @aurora-radius-md;
     transition: border-color 0.2s @aurora-ease, box-shadow 0.2s @aurora-ease;
 
     &::placeholder {
-        color: @aurora-text-dim;
+        color: var(--aurora-text-dim);
     }
 
     &:focus {
@@ -436,18 +439,18 @@ textarea {
 .Dropdown-menu {
     .aurora-glass(@aurora-blur-lg, 0.85);
     border-radius: @aurora-radius-md;
-    border: 1px solid @aurora-mist-2;
+    border: 1px solid var(--aurora-mist-2);
     box-shadow: 0 20px 48px -20px fade(#000, 80%);
     padding: 6px;
 
     > li > a {
-        color: @aurora-text;
+        color: var(--aurora-text);
         border-radius: @aurora-radius-sm;
         padding: 8px 12px;
 
         &:hover,
         &:focus {
-            background: @aurora-mist-2;
+            background: var(--aurora-mist-2);
             color: #fff;
         }
     }
@@ -456,13 +459,13 @@ textarea {
 .Modal-content {
     .aurora-glass(@aurora-blur-lg, 0.85);
     border-radius: @aurora-radius-lg;
-    border: 1px solid @aurora-mist-2;
+    border: 1px solid var(--aurora-mist-2);
     box-shadow: 0 32px 80px -24px fade(#000, 80%);
-    color: @aurora-text;
+    color: var(--aurora-text);
 }
 
 .Modal-header {
-    border-bottom: 1px solid @aurora-mist-1;
+    border-bottom: 1px solid var(--aurora-mist-1);
 
     h3 {
         .aurora-text-gradient();
@@ -470,7 +473,7 @@ textarea {
 }
 
 .Modal-footer {
-    border-top: 1px solid @aurora-mist-1;
+    border-top: 1px solid var(--aurora-mist-1);
 }
 
 // ---------------------------------------------------------------------
@@ -487,13 +490,13 @@ textarea {
     border-radius: 999px;
     padding: 2px 10px;
     font-weight: 500;
-    box-shadow: 0 0 0 1px @aurora-mist-1 inset;
+    box-shadow: 0 0 0 1px var(--aurora-mist-1) inset;
     transition: transform 0.2s @aurora-ease, box-shadow 0.2s @aurora-ease;
 
     &:hover {
         transform: translateY(-1px);
         box-shadow:
-            0 0 0 1px @aurora-mist-3 inset,
+            0 0 0 1px var(--aurora-mist-3) inset,
             0 6px 16px -8px fade(#000, 60%);
     }
 }
@@ -505,11 +508,11 @@ textarea {
 .NotificationList {
     .aurora-glass(@aurora-blur-lg, 0.85);
     border-radius: @aurora-radius-lg;
-    border: 1px solid @aurora-mist-2;
+    border: 1px solid var(--aurora-mist-2);
 
     &-header {
         background: transparent;
-        border-bottom: 1px solid @aurora-mist-1;
+        border-bottom: 1px solid var(--aurora-mist-1);
     }
 }
 
@@ -517,7 +520,7 @@ textarea {
     transition: background 0.2s @aurora-ease;
 
     &:hover {
-        background: @aurora-mist-1;
+        background: var(--aurora-mist-1);
     }
 
     &.unread {
@@ -543,7 +546,7 @@ textarea {
 .Alert {
     .aurora-glass();
     border-radius: @aurora-radius-md;
-    color: @aurora-text;
+    color: var(--aurora-text);
 
     &--success { border-color: fade(@aurora-teal, 50%); }
     &--error   { border-color: fade(@aurora-pink, 60%); }
@@ -597,7 +600,7 @@ textarea {
         inset: 0;
         background:
             radial-gradient(60% 80% at 80% 0%, fade(#fff, 18%) 0%, transparent 60%),
-            radial-gradient(40% 60% at 0% 100%, fade(@aurora-night-0, 30%) 0%, transparent 60%);
+            radial-gradient(40% 60% at 0% 100%, rgba(var(--aurora-surface-0-rgb), 0.3) 0%, transparent 60%);
         pointer-events: none;
     }
 
@@ -616,13 +619,13 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-    background: @aurora-night-1;
+    background: var(--aurora-surface-1);
 }
 
 ::-webkit-scrollbar-thumb {
     background: @aurora-gradient;
     border-radius: 999px;
-    border: 2px solid @aurora-night-1;
+    border: 2px solid var(--aurora-surface-1);
 
     &:hover {
         background: @aurora-gradient-warm;
@@ -644,9 +647,9 @@ textarea {
 
 .AuroraPaletteButton {
     position: relative;
-    background: @aurora-mist-1;
-    border: 1px solid @aurora-mist-2;
-    color: @aurora-text;
+    background: var(--aurora-mist-1);
+    border: 1px solid var(--aurora-mist-2);
+    color: var(--aurora-text);
     border-radius: 999px;
     padding: 0;
     width: 36px;
@@ -664,12 +667,12 @@ textarea {
         height: 18px;
         border-radius: 50%;
         background: var(--aurora-gradient);
-        box-shadow: 0 0 0 2px @aurora-night-1, var(--aurora-glow, @aurora-glow-cool);
+        box-shadow: 0 0 0 2px var(--aurora-surface-1), var(--aurora-glow, @aurora-glow-cool);
     }
 
     &:hover {
         transform: translateY(-1px);
-        border-color: @aurora-mist-3;
+        border-color: var(--aurora-mist-3);
         box-shadow: @aurora-glow-cool;
     }
 }
@@ -691,7 +694,7 @@ textarea {
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: @aurora-text-dim;
+        color: var(--aurora-text-dim);
         margin: 0 0 10px 4px;
         font-weight: 600;
     }
@@ -705,7 +708,7 @@ textarea {
 
 .AuroraPaletteSwatch {
     background: transparent;
-    border: 1px solid @aurora-mist-1;
+    border: 1px solid var(--aurora-mist-1);
     border-radius: @aurora-radius-md;
     padding: 8px 6px 7px;
     cursor: pointer;
@@ -725,20 +728,20 @@ textarea {
     &-label {
         font-size: 12px;
         font-weight: 500;
-        color: @aurora-text-muted;
+        color: var(--aurora-text-muted);
     }
 
     &:hover {
-        border-color: @aurora-mist-3;
-        background: @aurora-mist-1;
+        border-color: var(--aurora-mist-3);
+        background: var(--aurora-mist-1);
         transform: translateY(-2px);
 
-        .AuroraPaletteSwatch-label { color: @aurora-text; }
+        .AuroraPaletteSwatch-label { color: var(--aurora-text); }
     }
 
     &--active {
         border-color: transparent;
-        background: @aurora-mist-2;
+        background: var(--aurora-mist-2);
         position: relative;
 
         &::before {
