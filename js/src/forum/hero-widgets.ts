@@ -1,3 +1,8 @@
+// @ts-nocheck — TODO: declare class properties + parameter types
+// Transitional marker from the audit-driven TS conversion. The
+// underlying JS uses Flarum's `this.foo = ...` initialiser pattern
+// which TypeScript strict mode rejects. Remove once a follow-up pass
+// adds explicit property declarations and vnode/callback types.
 /**
  * Injects four stat tiles into the welcome hero on the forum index.
  * Pulls counts from app.forum (Flarum's serialized forum data) when
