@@ -1,7 +1,7 @@
 import Extend from 'flarum/common/extenders';
 import app from 'flarum/admin/app';
 
-const t = (key) => app.translator.trans(`ernestdefoe-flarum-aurora-theme.admin.settings.${key}`, {}, true);
+const t = (key) => app.translator.trans(`ernestdefoe-aurora.admin.settings.${key}`, {}, true);
 
 export default [
     new Extend.Admin()

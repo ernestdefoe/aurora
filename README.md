@@ -9,7 +9,7 @@ palette.
 ![PHP](https://img.shields.io/badge/PHP-%5E8.3-777bb4.svg)
 
 > **Flarum 1.x users:** this branch targets Flarum 2.0. For Flarum 1.8.x see the
-> [`1.x`](https://github.com/ernestdefoe/flarum-aurora-theme/tree/1.x) branch.
+> [`1.x`](https://github.com/ernestdefoe/aurora/tree/1.x) branch.
 
 ## Screenshots
 
@@ -71,7 +71,7 @@ Add or override a preset by extending `PALETTES` in `js/src/forum/palettes.js`.
 ## Installation
 
 ```bash
-composer require ernestdefoe/flarum-aurora-theme
+composer require ernestdefoe/aurora
 ```
 
 Then enable **Aurora Theme** under **Admin → Extensions**.
@@ -92,8 +92,8 @@ Open **Admin → Extensions → Aurora Theme** to customize:
 ## Development
 
 ```bash
-git clone https://github.com/ernestdefoe/flarum-aurora-theme.git
-cd flarum-aurora-theme/js
+git clone https://github.com/ernestdefoe/aurora.git
+cd aurora/js
 npm install
 npm run build      # production bundle
 npm run dev        # watch mode
@@ -130,7 +130,7 @@ resources/locale/
 - Modern browsers with `backdrop-filter` support. Older browsers gracefully
   degrade to solid dark surfaces.
 
-Need Flarum 1.x? Switch to the [`1.x`](https://github.com/ernestdefoe/flarum-aurora-theme/tree/1.x)
+Need Flarum 1.x? Switch to the [`1.x`](https://github.com/ernestdefoe/aurora/tree/1.x)
 branch — it targets `flarum/core ^1.8.0` and uses the legacy `app.extensionData`
 settings API.
 

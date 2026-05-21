@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "@ernestdefoe/flarum-aurora-theme",
+    "name": "@ernestdefoe/aurora",
     "version": "1.0.0",
     "scripts": {
         "dev": "webpack --mode development --watch",

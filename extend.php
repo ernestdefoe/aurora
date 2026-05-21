@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/flarum-aurora-theme.
+ * This file is part of ernestdefoe/aurora.
  *
  * Copyright (c) Ernest Defoe.
  *
