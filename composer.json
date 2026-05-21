@@ -1,5 +1,5 @@
 {
-    "name": "ernestdefoe/flarum-aurora-theme",
+    "name": "ernestdefoe/aurora",
     "description": "An aurora-inspired theme for Flarum with vibrant gradients, glowing accents, and a modern glassmorphic feel.",
     "keywords": ["flarum", "theme", "aurora", "gradient", "dark", "glassmorphism"],
     "type": "flarum-extension",

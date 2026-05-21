@@ -67,7 +67,7 @@ Add or override a preset by extending `PALETTES` in `js/src/forum/palettes.js`.
 ## Installation
 
 ```bash
-composer require ernestdefoe/flarum-aurora-theme
+composer require ernestdefoe/aurora
 ```
 
 Then enable **Aurora Theme** under **Admin → Extensions**.
@@ -88,8 +88,8 @@ Open **Admin → Extensions → Aurora Theme** to customize:
 ## Development
 
 ```bash
-git clone https://github.com/ernestdefoe/flarum-aurora-theme.git
-cd flarum-aurora-theme/js
+git clone https://github.com/ernestdefoe/aurora.git
+cd aurora/js
 npm install
 npm run build      # production bundle
 npm run dev        # watch mode

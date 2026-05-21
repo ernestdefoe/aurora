@@ -7,7 +7,7 @@ import { installHeroWidgets } from './hero-widgets';
 // the default colors before the user's choice is restored.
 applyPalette(loadStoredPalette());
 
-app.initializers.add('ernestdefoe/flarum-aurora-theme', () => {
+app.initializers.add('ernestdefoe/aurora', () => {
     applyThemeVariables();
 
     // Re-apply on every page render in case Flarum tears down the header.
