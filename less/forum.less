@@ -551,6 +551,32 @@ textarea {
 }
 
 // ---------------------------------------------------------------------
+// Hero — width clamp
+//
+// Without this, .Page-hero spans the full viewport on wide screens and
+// the gradient banner looks oversized. Matches the Mosaic theme's clamp
+// (max 1600px, 32px gutter, 20px on narrow viewports) so Aurora's hero
+// lines up at the same width on both themes.
+// ---------------------------------------------------------------------
+
+.IndexPage .Page-hero {
+    max-width: 1600px !important;
+    width: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1100px) {
+    .IndexPage .Page-hero {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}
+
+// ---------------------------------------------------------------------
 // Hero
 // ---------------------------------------------------------------------
 
