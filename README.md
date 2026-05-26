@@ -1,5 +1,11 @@
 # Aurora Theme for Flarum
 
+[![Floxum](https://floxum.com/extension/ernestdefoe/aurora/badge/name)](https://floxum.com/extension/ernestdefoe/aurora)
+[![Version](https://floxum.com/extension/ernestdefoe/aurora/badge/highest-version)](https://floxum.com/extension/ernestdefoe/aurora)
+[![Downloads](https://floxum.com/extension/ernestdefoe/aurora/badge/downloads)](https://floxum.com/extension/ernestdefoe/aurora)
+[![Review](https://floxum.com/extension/ernestdefoe/aurora/badge/review)](https://floxum.com/extension/ernestdefoe/aurora)
+[![License](https://floxum.com/extension/ernestdefoe/aurora/badge/license)](https://floxum.com/extension/ernestdefoe/aurora)
+
 An aurora-inspired theme for [Flarum](https://flarum.org/) featuring animated
 gradient backdrops, glassmorphic panels, glowing accents, and a dark night-sky
 palette.
