@@ -183,7 +183,11 @@ h1, h2, h3, h4 {
 
 .DiscussionList {
     border-radius: @aurora-radius-lg;
-    overflow: hidden;
+    // No overflow: hidden — each .DiscussionListItem now carries its
+    // own border-radius (line ~192), and the per-item controls dropdown
+    // (the ⋯ menu rendered inside each card) needs to extend past the
+    // card edges. Clipping the list trapped those menus inside the
+    // list's bounding box and they appeared cut off / invisible.
 }
 
 .DiscussionListItem {
@@ -191,6 +195,23 @@ h1, h2, h3, h4 {
     border: 1px solid var(--aurora-mist-1);
     border-radius: @aurora-radius-md;
     margin-bottom: 10px;
+    // Each card spawns its own stacking context via the
+    // backdrop-filter inside .aurora-glass(...), so a Dropdown rendered
+    // INSIDE one card would paint beneath the NEXT card in DOM order
+    // (its stacking context is above this one). Make the card itself
+    // positionable so we can lift it when a dropdown opens or anything
+    // inside it gains focus.
+    position: relative;
+    z-index: 1;
+
+    // When the per-item controls dropdown is open Flarum toggles
+    // .open onto the .Dropdown wrapper; :focus-within is the belt-and-
+    // suspenders fallback for browsers / states that miss the class.
+    &:focus-within,
+    &:has(.Dropdown.open) {
+        z-index: 10;
+    }
+
     // Asymmetric padding: extra room on the right because Flarum
     // renders the per-item controls dropdown (⋯) for mods/admins
     // absolutely-positioned in the top-right of the card. With the
@@ -455,6 +476,13 @@ textarea {
     border: 1px solid var(--aurora-mist-2);
     box-shadow: 0 20px 48px -20px fade(#000, 80%);
     padding: 6px;
+    // Lift dropdown menus above sibling .DiscussionListItem cards.
+    // Each item's `.aurora-glass(...)` mixin applies `backdrop-filter`,
+    // which spawns its own stacking context — without an explicit
+    // z-index here the menu rendered inside one card can be painted
+    // beneath the next card in the list. 1050 sits below Flarum's
+    // modal layer (1100+) but above ordinary content.
+    z-index: 1050;
 
     > li > a {
         color: var(--aurora-text);
