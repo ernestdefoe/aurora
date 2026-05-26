@@ -1,6 +1,6 @@
 // @ts-nocheck — same transitional marker the rest of this extension uses.
 import app from 'flarum/forum/app';
-import { extend } from 'flarum/common/extend';
+import { extend, override } from 'flarum/common/extend';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import WelcomeHero from 'flarum/forum/components/WelcomeHero';
 
@@ -28,24 +28,36 @@ app.initializers.add('ernestdefoe/aurora', () => {
         items.add('aurora-palette', PaletteButton.component(), 30);
     });
 
+    // Force the welcome hero to always render. Without this override
+    // a visitor who clicked the dismiss X (back when it existed) has
+    // `welcomeHidden=true` in localStorage, and WelcomeHero.view()
+    // returns null for them — which also kills the stat tiles below.
+    // The hero still respects an empty welcomeTitle (so an operator
+    // who actually wants no welcome banner can still get that by
+    // clearing it in admin); we only stop honouring the per-visitor
+    // dismissal.
+    override(WelcomeHero.prototype, 'isHidden', function (original) {
+        const title = app.forum.attribute('welcomeTitle');
+        if (typeof title !== 'string' || !title.trim()) return true;
+        return false;
+    });
+
     // Hero stat tiles — rendered inside the welcome hero so the
     // glassmorphic tile styling layers correctly over the gradient
     // backdrop. Priority 60 puts them BELOW the 'content' item
-    // (title + welcome message at 80) and BELOW the 'dismiss-button'
-    // (100), so the read order is: dismiss → title/message → tiles.
-    //
-    // Known trade-off: when a visitor dismisses the welcome message,
-    // WelcomeHero.view() returns null (localStorage's `welcomeHidden`
-    // flag) and the tiles disappear with it. That's the cost of
-    // visually integrating with the hero's gradient — moving to
-    // IndexPage.contentItems would survive dismissal but the tiles
-    // would sit on plain page background and look bare.
+    // (title + welcome message at 80) so the read order is:
+    // title/message → tiles. The dismiss-button is removed below.
     //
     // Reads from `app.forum.attribute('auroraStats')`, which the
     // ForumResource extender (see extend.php) populates from the
     // cached AuroraStats snapshot. Returns null when the attribute
     // is missing so we never render fake numbers.
     extend(WelcomeHero.prototype, 'bodyItems', function (items) {
+        // Drop Flarum's dismiss button — the aurora design treats
+        // the hero (with its embedded stat tiles) as permanent
+        // furniture, not transient onboarding chrome.
+        items.remove('dismiss-button');
+
         const widgets = heroWidgets();
         if (widgets !== null) {
             items.add('aurora-stats', widgets, 60);

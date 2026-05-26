@@ -191,9 +191,22 @@ h1, h2, h3, h4 {
     border: 1px solid var(--aurora-mist-1);
     border-radius: @aurora-radius-md;
     margin-bottom: 10px;
-    padding: 14px 18px;
+    // Asymmetric padding: extra room on the right because Flarum
+    // renders the per-item controls dropdown (⋯) for mods/admins
+    // absolutely-positioned in the top-right of the card. With the
+    // previous 14/18 the avatar pressed against the left edge and
+    // the dropdown trigger pressed against the right edge.
+    padding: 18px 56px 18px 26px;
     transition: transform 0.25s @aurora-ease, background 0.25s @aurora-ease, border-color 0.25s @aurora-ease, box-shadow 0.25s @aurora-ease;
     animation: aurora-fade-up 0.4s @aurora-ease both;
+
+    // Tighter inset on narrow viewports so the title doesn't get
+    // crunched to 2-3 lines. The dropdown trigger still has room
+    // because the reply-count badge sits next to it, not behind it,
+    // on this width.
+    @media (max-width: 767.98px) {
+        padding: 14px 16px;
+    }
 
     &:hover {
         transform: translateY(-2px);
