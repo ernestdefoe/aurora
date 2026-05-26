@@ -890,3 +890,57 @@ textarea {
         animation: none !important;
     }
 }
+
+// ---------------------------------------------------------------------
+// Admin feature toggles — applyThemeVariables() in forum/index.ts
+// adds these body classes when the corresponding admin setting is
+// off. Previously the classes were added but no CSS targeted them,
+// so the toggles were cosmetic (audit F2).
+// ---------------------------------------------------------------------
+
+// Animate aurora background — turn every animation + transition off
+// when disabled. Aurora ships heavy animated backdrops + ripple
+// effects + button hover transitions; a forum operator who wants a
+// "static" look needs them ALL gone, not just the backdrop blobs.
+// `* { animation: none }` is the broad-brush hammer that achieves
+// that without enumerating every selector that animates. Restrict to
+// `body.aurora-no-animation` so it only fires when explicitly opted
+// out of.
+body.aurora-no-animation,
+body.aurora-no-animation *,
+body.aurora-no-animation *::before,
+body.aurora-no-animation *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+// Glassmorphism — opt-out replaces the frosted-blur surfaces with a
+// flat panel. Targets the helper class the theme applies to
+// .Header, .DiscussionListItem, .Post, etc. Removing the
+// backdrop-filter alone leaves a translucent-with-no-blur look; we
+// also swap to the solid surface variable so the panels read as
+// proper flat cards.
+body.aurora-no-glass {
+    .Header-controls,
+    .App-header,
+    .Hero,
+    .DiscussionListItem,
+    .Post,
+    .Dropdown-menu,
+    .Modal-content {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: var(--aurora-surface-2, var(--surface, #11193d)) !important;
+    }
+}
+
+// Glow effects — drop the box-shadow glow variables to `none`. The
+// theme references --aurora-glow-cool / --aurora-glow-warm in
+// multiple selectors; nulling them centrally cleanly disables the
+// glow everywhere it was applied without needing per-selector
+// overrides.
+body.aurora-no-glow {
+    --aurora-glow-cool: none;
+    --aurora-glow-warm: none;
+    --aurora-glow-accent: none;
+}

@@ -1,41 +1,74 @@
-// @ts-nocheck — TODO: declare class properties + parameter types
-// Transitional marker from the audit-driven TS conversion. The
-// underlying JS uses Flarum's `this.foo = ...` initialiser pattern
-// which TypeScript strict mode rejects. Remove once a follow-up pass
-// adds explicit property declarations and vnode/callback types.
+// @ts-nocheck — same transitional marker the rest of this extension uses.
 import app from 'flarum/forum/app';
-import { applyPalette, loadStoredPalette } from './palettes';
-import { installPalettePicker } from './palette-picker';
-import { installHeroWidgets } from './hero-widgets';
+import { extend } from 'flarum/common/extend';
+import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
+import WelcomeHero from 'flarum/forum/components/WelcomeHero';
 
-// Apply the stored palette as early as possible so the page never flashes
-// the default colors before the user's choice is restored.
+import { applyPalette, loadStoredPalette } from './palettes';
+import PaletteButton from './components/PaletteButton';
+import heroWidgets from './components/HeroWidgets';
+
+// Pre-paint: apply the stored palette as early as possible so the
+// page never flashes the default colors before the user's choice is
+// restored. Runs at module load — before the initializer.
 applyPalette(loadStoredPalette());
 
 app.initializers.add('ernestdefoe/aurora', () => {
     applyThemeVariables();
-
-    // Re-apply on every page render in case Flarum tears down the header.
-    const install = () => {
-        installPalettePicker();
-        installHeroWidgets(app);
-    };
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', install);
-    } else {
-        install();
-    }
-
     enableScrollAwareHeader();
     enableRippleButtons();
+
+    // Palette picker — added to the right-side header item list so it
+    // sits alongside the user dropdown / notifications and survives
+    // Mithril's reconciler tearing down the header subtree on every
+    // navigation. The previous imperative `installPalettePicker` was
+    // attached once at DOMContentLoaded and vanished on first route
+    // change.
+    extend(HeaderSecondary.prototype, 'items', function (items) {
+        items.add('aurora-palette', PaletteButton.component(), 30);
+    });
+
+    // Hero stat tiles — appended below the welcome hero's existing
+    // body items. Reads from `app.forum.attribute('auroraStats')`,
+    // which the ForumResource extender (see extend.php) populates from
+    // the cached AuroraStats snapshot. Returns null when the attribute
+    // is missing so we never render fake numbers.
+    extend(WelcomeHero.prototype, 'bodyItems', function (items) {
+        const widgets = heroWidgets();
+        if (widgets !== null) {
+            items.add('aurora-stats', widgets, 50);
+        }
+    });
 });
 
+/**
+ * Read the three admin color settings + three feature toggles and
+ * apply them to <html> as CSS custom properties / body classes.
+ *
+ * Color settings were previously serialized to the forum payload but
+ * never actually applied — admins saw zero visual change on save
+ * (audit F1). Now they override the active palette's c1/c2/accent
+ * on each boot. The user's palette picker still wins for that
+ * session (re-applies via applyPalette on click), so the admin
+ * config acts as a "starting point" defaults layer.
+ *
+ * Body-class toggles were also previously unmatched by any CSS;
+ * less/forum.less now carries the matching .aurora-no-* rules.
+ */
 function applyThemeVariables() {
-    // app.forum may not be hydrated yet on first boot — guard defensively.
     const get = (key) => (app && app.forum && typeof app.forum.attribute === 'function')
         ? app.forum.attribute(key)
         : undefined;
+
+    const setVar = (name, value) => {
+        if (typeof value === 'string' && value.trim() !== '') {
+            document.documentElement.style.setProperty(name, value.trim());
+        }
+    };
+
+    setVar('--aurora-c1',     get('aurora-theme.primary_gradient_start'));
+    setVar('--aurora-c2',     get('aurora-theme.primary_gradient_end'));
+    setVar('--aurora-accent', get('aurora-theme.accent_color'));
 
     if (get('aurora-theme.animate_background') === false) {
         document.body.classList.add('aurora-no-animation');
