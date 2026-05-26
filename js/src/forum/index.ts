@@ -46,7 +46,17 @@ app.initializers.add('ernestdefoe/aurora', () => {
     // cached AuroraStats snapshot. Returns null when the attribute
     // is missing so we never render fake numbers.
     extend(IndexPage.prototype, 'contentItems', function (items) {
+        // DEBUG (TEMP): log every step so we can find where the
+        // widgets are getting dropped. Will be removed once the
+        // missing-stats issue is resolved.
+        const stats = app.forum.attribute('auroraStats');
+        // eslint-disable-next-line no-console
+        console.log('[aurora] IndexPage.contentItems extender firing. auroraStats:', stats);
+
         const widgets = heroWidgets();
+        // eslint-disable-next-line no-console
+        console.log('[aurora] heroWidgets() returned:', widgets);
+
         if (widgets !== null) {
             items.add('aurora-stats', widgets, 110);
         }
