@@ -2,7 +2,7 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
-import WelcomeHero from 'flarum/forum/components/WelcomeHero';
+import IndexPage from 'flarum/forum/components/IndexPage';
 
 import { applyPalette, loadStoredPalette } from './palettes';
 import PaletteButton from './components/PaletteButton';
@@ -28,15 +28,27 @@ app.initializers.add('ernestdefoe/aurora', () => {
         items.add('aurora-palette', PaletteButton.component(), 30);
     });
 
-    // Hero stat tiles — appended below the welcome hero's existing
-    // body items. Reads from `app.forum.attribute('auroraStats')`,
-    // which the ForumResource extender (see extend.php) populates from
-    // the cached AuroraStats snapshot. Returns null when the attribute
+    // Hero stat tiles — rendered as the FIRST contentItem on the
+    // index page so they sit directly under whatever Hero
+    // PageStructure paints above (Flarum's WelcomeHero, or the
+    // theme's custom hero). Priority 110 puts them ahead of the
+    // toolbar (100) and discussion list (90).
+    //
+    // Was originally hooked into WelcomeHero.bodyItems but that
+    // approach collapsed the moment a visitor dismissed the welcome
+    // message — WelcomeHero.view() returns null when localStorage's
+    // `welcomeHidden` is set, taking the widgets down with it.
+    // IndexPage is the page-level container and always renders, so
+    // the tiles survive the dismissal.
+    //
+    // Reads from `app.forum.attribute('auroraStats')`, which the
+    // ForumResource extender (see extend.php) populates from the
+    // cached AuroraStats snapshot. Returns null when the attribute
     // is missing so we never render fake numbers.
-    extend(WelcomeHero.prototype, 'bodyItems', function (items) {
+    extend(IndexPage.prototype, 'contentItems', function (items) {
         const widgets = heroWidgets();
         if (widgets !== null) {
-            items.add('aurora-stats', widgets, 50);
+            items.add('aurora-stats', widgets, 110);
         }
     });
 });
