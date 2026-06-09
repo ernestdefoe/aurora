@@ -11,6 +11,8 @@
 
 namespace ErnestDefoe\AuroraTheme;
 
+use ErnestDefoe\AuroraTheme\Forum\AuroraStats;
+use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Extend;
 
 return [
@@ -38,4 +40,15 @@ return [
         ->serializeToForum('aurora-theme.enable_glassmorphism', 'aurora-theme.enable_glassmorphism', 'boolval')
         ->serializeToForum('aurora-theme.enable_glow', 'aurora-theme.enable_glow', 'boolval')
         ->serializeToForum('aurora-theme.animate_background', 'aurora-theme.animate_background', 'boolval'),
+
+    // Real hero-widget stats. Exposes the four counts (users, discussions,
+    // posts, online-last-5-min) as a single `auroraStats` forum attribute,
+    // backed by AuroraStats' 60-second cache so the COUNT(*) aggregates run at
+    // most once per minute per worker. Replaces the hardcoded placeholder
+    // numbers (1284 / 8742 / 53901 / 142) the audit flagged as misleading on
+    // freshly-installed forums.
+    (new Extend\ApiSerializer(ForumSerializer::class))
+        ->attribute('auroraStats', function ($serializer, $model, $attributes) {
+            return resolve(AuroraStats::class)->snapshot();
+        }),
 ];

@@ -78,6 +78,13 @@
 
     --aurora-gradient: linear-gradient(120deg, var(--aurora-c1) 0%, var(--aurora-c2) 35%, var(--aurora-c3) 70%, var(--aurora-c4) 100%);
 
+    // Glow shadows exposed as CSS custom properties (seeded from the LESS
+    // values) so the admin's "Enable glow" toggle can null them at runtime
+    // via `body.aurora-no-glow` (see forum.less). Selectors reference
+    // var(--aurora-glow-cool/warm) instead of the raw @ values.
+    --aurora-glow-cool: @aurora-glow-cool;
+    --aurora-glow-warm: @aurora-glow-warm;
+
     // Theme-swappable surfaces. The `-rgb` triplets are used by rgba()
     // calls that need partial transparency over a theme-aware base.
     --aurora-surface-0:      #05070f;

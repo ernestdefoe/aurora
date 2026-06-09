@@ -1,67 +1,92 @@
-// @ts-nocheck — TODO: declare class properties + parameter types
-// Transitional marker from the audit-driven TS conversion. The
-// underlying JS uses Flarum's `this.foo = ...` initialiser pattern
-// which TypeScript strict mode rejects. Remove once a follow-up pass
-// adds explicit property declarations and vnode/callback types.
+// @ts-nocheck — same transitional marker the rest of this extension uses.
+import extractText from 'flarum/common/utils/extractText';
+
 /**
- * Injects four stat tiles into the welcome hero on the forum index.
- * Pulls counts from app.forum (Flarum's serialized forum data) when
- * available, falls back to placeholders so the tiles look right in
- * preview / demo contexts.
+ * Injects up to four stat tiles into the welcome hero on the forum index.
+ *
+ * Counts come from `app.forum.attribute('auroraStats')`, which the
+ * ForumSerializer extender in extend.php populates from the cached
+ * AuroraStats snapshot. The previous version fabricated trend labels
+ * ('+24 this week' etc.) and fell back to hardcoded numbers
+ * (1284 / 8742 / 53901 / 142) — both flagged by the audit (F4 / F8) as
+ * misleading; both are gone. Missing counts hide their tile; a real 0
+ * stays visible.
+ *
+ * Injection is one-shot per page: tryInject() runs immediately, and a
+ * short-lived MutationObserver only watches until the hero appears, then
+ * disconnects — so we never leave a body-subtree observer running for the
+ * session (audit F5). The caller (index.ts) re-arms this on every IndexPage
+ * mount, so it survives SPA navigation without a permanent observer.
  */
 export function installHeroWidgets(app) {
-    const observer = new MutationObserver(() => tryInject(app));
+    if (tryInject(app)) return;
+
+    const observer = new MutationObserver(() => {
+        if (tryInject(app)) observer.disconnect();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
-    tryInject(app);
+
+    // Safety valve: stop watching after 10s even if the hero never appears
+    // (e.g. welcome hero disabled) so the observer can't leak.
+    setTimeout(() => observer.disconnect(), 10000);
 }
 
-function tryInject(app) {
+/**
+ * @return true when there is nothing left to do (injected, already present,
+ *         or no data / hero) so the observer can stop; false to keep watching.
+ */
+function tryInject(app): boolean {
     const hero = document.querySelector('.Hero .container, .Hero');
-    if (!hero || hero.querySelector('.HeroWidgets')) return;
+    if (!hero) return false;
+    if (hero.querySelector('.HeroWidgets')) return true;
 
-    const data = readForumStats(app);
+    const tiles = buildTiles(app);
+    if (tiles.length === 0) return true;
 
     const widgets = document.createElement('div');
     widgets.className = 'HeroWidgets';
-    widgets.append(
-        widget('Members',     formatCount(data.members),     data.membersTrend, iconUsers()),
-        widget('Discussions', formatCount(data.discussions), data.discussionsTrend, iconChat()),
-        widget('Posts',       formatCount(data.posts),       data.postsTrend, iconMessage()),
-        widget('Online now',  formatCount(data.online),      data.onlineTrend, iconPulse()),
-    );
-
+    tiles.forEach((tile) => widgets.appendChild(widget(tile.label, formatCount(tile.count), tile.icon)));
     hero.appendChild(widgets);
+    return true;
 }
 
-function widget(label, value, trend, iconSvg) {
+function buildTiles(app) {
+    const stats = (app && app.forum && typeof app.forum.attribute === 'function')
+        ? app.forum.attribute('auroraStats')
+        : null;
+    if (!stats || typeof stats !== 'object') return [];
+
+    const t = (key) => extractText(app.translator.trans(`ernestdefoe-aurora.forum.widgets.${key}`));
+
+    const defs = [
+        { count: stats.users,       label: t('members'),     icon: iconUsers() },
+        { count: stats.discussions, label: t('discussions'), icon: iconChat() },
+        { count: stats.posts,       label: t('posts'),       icon: iconMessage() },
+        { count: stats.online,      label: t('online'),      icon: iconPulse() },
+    ];
+
+    // Drop tiles whose count is null/undefined (data not shipped). A real 0 is
+    // meaningful signal ("no discussions yet") and stays visible.
+    return defs.filter((d) => d.count !== null && d.count !== undefined);
+}
+
+function widget(label, value, iconSvg) {
     const el = document.createElement('div');
     el.className = 'HeroWidget';
+    // iconSvg is a compile-time constant; label comes from the locale file and
+    // value is number-derived — none are user input, so innerHTML is safe here.
     el.innerHTML = `
         <div class="HeroWidget-label">${iconSvg}<span>${label}</span></div>
         <div class="HeroWidget-value">${value}</div>
-        ${trend ? `<div class="HeroWidget-trend">${trend}</div>` : ''}
     `;
     return el;
 }
 
-function readForumStats(app) {
-    const attrs = (app && app.forum && app.forum.data && app.forum.data.attributes) || {};
-    return {
-        members:        attrs.userCount        || 1284,
-        discussions:    attrs.discussionCount  || 8742,
-        posts:          attrs.postCount        || 53901,
-        online:         attrs.onlineCount      || 142,
-        membersTrend:     '+24 this week',
-        discussionsTrend: '+38 today',
-        postsTrend:       '+412 today',
-        onlineTrend:      'live',
-    };
-}
-
 function formatCount(n) {
-    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-    if (n >= 10_000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-    return n.toLocaleString();
+    const v = Number(n) || 0;
+    if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (v >= 10_000) return (v / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    return v.toLocaleString();
 }
 
 function iconUsers() {

@@ -10,7 +10,9 @@ ernestdefoe-aurora:
   forum:
     palette:
       button_label: "Choose color palette"
+      palette: "Palette"
       title: "Color palette"
+      apply: "Apply {palette} palette"
       aurora: "Aurora"
       sunset: "Sunset"
       ocean: "Ocean"

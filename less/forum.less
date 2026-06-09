@@ -223,7 +223,7 @@ h1, h2, h3, h4 {
         color: #fff;
         border-radius: 999px;
         padding: 2px 10px;
-        box-shadow: @aurora-glow-cool;
+        box-shadow: var(--aurora-glow-cool);
         animation: aurora-pulse 2.4s ease-out infinite;
     }
 }
@@ -265,7 +265,7 @@ h1, h2, h3, h4 {
             transform: translateY(-2px);
             box-shadow:
                 0 12px 32px -10px fade(@aurora-violet, 80%),
-                @aurora-glow-cool;
+                var(--aurora-glow-cool);
         }
     }
 
@@ -372,7 +372,7 @@ h1, h2, h3, h4 {
         box-shadow:
             0 0 0 2px var(--aurora-surface-1),
             0 0 0 3px fade(@aurora-pink, 60%),
-            @aurora-glow-warm;
+            var(--aurora-glow-warm);
     }
 }
 
@@ -483,7 +483,7 @@ textarea {
 .Badge {
     background: @aurora-gradient;
     color: #fff;
-    box-shadow: @aurora-glow-cool;
+    box-shadow: var(--aurora-glow-cool);
 }
 
 .TagLabel {
@@ -534,7 +534,7 @@ textarea {
             border-radius: 50%;
             background: @aurora-gradient;
             margin-right: 8px;
-            box-shadow: @aurora-glow-cool;
+            box-shadow: var(--aurora-glow-cool);
         }
     }
 }
@@ -667,13 +667,13 @@ textarea {
         height: 18px;
         border-radius: 50%;
         background: var(--aurora-gradient);
-        box-shadow: 0 0 0 2px var(--aurora-surface-1), var(--aurora-glow, @aurora-glow-cool);
+        box-shadow: 0 0 0 2px var(--aurora-surface-1), var(--aurora-glow, var(--aurora-glow-cool));
     }
 
     &:hover {
         transform: translateY(-1px);
         border-color: var(--aurora-mist-3);
-        box-shadow: @aurora-glow-cool;
+        box-shadow: var(--aurora-glow-cool);
     }
 
     // Desktop default: keep the button a compact gradient circle in
@@ -889,4 +889,36 @@ textarea {
     .Post {
         animation: none !important;
     }
+}
+
+// =====================================================================
+// Admin feature toggles — body-class opt-outs (audit F2)
+//
+// applyThemeVariables() in js/src/forum/index.ts adds these classes when
+// the matching admin setting is disabled. Previously the classes were
+// added but no CSS acted on them, so the toggles were no-ops.
+//   - aurora-no-glass : handled inline by the .aurora-glass() mixin.
+//   - aurora-no-animation / aurora-no-glow : below.
+// =====================================================================
+
+// Animate background = off → kill all animation + transition. The broad
+// `*` hammer is intentional: the aurora look has motion in many places
+// (drifting blobs, pulses, fade-ups, shimmers) and an admin who turns it
+// off wants them ALL gone, not just the backdrop. Scoped to the opt-out
+// class so it never affects the default experience.
+body.aurora-no-animation,
+body.aurora-no-animation *,
+body.aurora-no-animation *::before,
+body.aurora-no-animation *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+// Enable glow = off → null the glow custom properties. Every glow
+// box-shadow now references var(--aurora-glow-cool/warm) (see
+// variables.less), so nulling them here disables the glow everywhere it
+// was applied without per-selector overrides.
+body.aurora-no-glow {
+    --aurora-glow-cool: none;
+    --aurora-glow-warm: none;
 }

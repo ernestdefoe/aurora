@@ -4,8 +4,11 @@
 // which TypeScript strict mode rejects. Remove once a follow-up pass
 // adds explicit property declarations and vnode/callback types.
 import app from 'flarum/forum/app';
+import { extend } from 'flarum/common/extend';
+import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
+import IndexPage from 'flarum/forum/components/IndexPage';
 import { applyPalette, loadStoredPalette } from './palettes';
-import { installPalettePicker } from './palette-picker';
+import PaletteButton from './components/PaletteButton';
 import { installHeroWidgets } from './hero-widgets';
 
 // Apply the stored palette as early as possible so the page never flashes
@@ -15,27 +18,55 @@ applyPalette(loadStoredPalette());
 app.initializers.add('ernestdefoe/aurora', () => {
     applyThemeVariables();
 
-    // Re-apply on every page render in case Flarum tears down the header.
-    const install = () => {
-        installPalettePicker();
-        installHeroWidgets(app);
-    };
+    // Palette picker — registered as a Mithril item on the header's secondary
+    // controls so it survives the SPA reconciler tearing the header subtree
+    // down on navigation. The previous imperative installPalettePicker() was
+    // attached once at DOMContentLoaded and vanished on the first route change
+    // (audit F3).
+    extend(HeaderSecondary.prototype, 'items', function (items) {
+        items.add('aurora-palette', PaletteButton.component(), 30);
+    });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', install);
-    } else {
-        install();
-    }
+    // Hero stat tiles — injected into the welcome hero on the index page.
+    // Re-armed on every IndexPage mount (Mithril lifecycle) so they survive
+    // navigation, and the injecting MutationObserver disconnects as soon as it
+    // succeeds rather than running for the whole session (audit F5).
+    extend(IndexPage.prototype, 'oncreate', function () {
+        installHeroWidgets(app);
+    });
 
     enableScrollAwareHeader();
     enableRippleButtons();
 });
 
+/**
+ * Read the three admin color settings + three feature toggles and apply them
+ * to the document as CSS custom properties / body classes.
+ *
+ * The color settings were previously serialized to the forum payload but never
+ * actually applied — an admin who changed the gradient saw zero visual change
+ * (audit F1). They now seed --aurora-c1/c2/accent on boot; the palette picker
+ * still wins for the current session (it re-applies via applyPalette on click),
+ * so the admin config behaves as a defaults layer.
+ *
+ * The body-class toggles were likewise unmatched by any CSS; less/forum.less
+ * now carries the matching body.aurora-no-* rules (audit F2).
+ */
 function applyThemeVariables() {
     // app.forum may not be hydrated yet on first boot — guard defensively.
     const get = (key) => (app && app.forum && typeof app.forum.attribute === 'function')
         ? app.forum.attribute(key)
         : undefined;
+
+    const setVar = (name, value) => {
+        if (typeof value === 'string' && value.trim() !== '') {
+            document.documentElement.style.setProperty(name, value.trim());
+        }
+    };
+
+    setVar('--aurora-c1',     get('aurora-theme.primary_gradient_start'));
+    setVar('--aurora-c2',     get('aurora-theme.primary_gradient_end'));
+    setVar('--aurora-accent', get('aurora-theme.accent_color'));
 
     if (get('aurora-theme.animate_background') === false) {
         document.body.classList.add('aurora-no-animation');
