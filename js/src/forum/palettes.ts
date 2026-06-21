@@ -1,4 +1,3 @@
-// @ts-nocheck — TODO: declare class properties + parameter types
 // Transitional marker from the audit-driven TS conversion. The
 // underlying JS uses Flarum's `this.foo = ...` initialiser pattern
 // which TypeScript strict mode rejects. Remove once a follow-up pass
@@ -47,8 +46,8 @@ export const PALETTES = {
 
 export const DEFAULT_PALETTE = 'aurora';
 
-export function applyPalette(name) {
-    const palette = PALETTES[name] || PALETTES[DEFAULT_PALETTE];
+export function applyPalette(name: string) {
+    const palette = PALETTES[name as keyof typeof PALETTES] || PALETTES[DEFAULT_PALETTE];
     const root = document.documentElement;
 
     root.style.setProperty('--aurora-c1', palette.c1);
@@ -74,7 +73,7 @@ export function loadStoredPalette() {
     return DEFAULT_PALETTE;
 }
 
-export function storePalette(name) {
+export function storePalette(name: string) {
     try {
         localStorage.setItem('aurora-theme.palette', name);
     } catch (e) {

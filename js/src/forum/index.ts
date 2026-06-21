@@ -1,4 +1,3 @@
-// @ts-nocheck — same transitional marker the rest of this extension uses.
 import app from 'flarum/forum/app';
 import { extend, override } from 'flarum/common/extend';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
@@ -80,11 +79,11 @@ app.initializers.add('ernestdefoe/aurora', () => {
  * less/forum.less now carries the matching .aurora-no-* rules.
  */
 function applyThemeVariables() {
-    const get = (key) => (app && app.forum && typeof app.forum.attribute === 'function')
+    const get = (key: string) => (app && app.forum && typeof app.forum.attribute === 'function')
         ? app.forum.attribute(key)
         : undefined;
 
-    const setVar = (name, value) => {
+    const setVar = (name: string, value: unknown) => {
         if (typeof value === 'string' && value.trim() !== '') {
             document.documentElement.style.setProperty(name, value.trim());
         }
@@ -128,7 +127,7 @@ function enableScrollAwareHeader() {
 
 function enableRippleButtons() {
     document.addEventListener('click', (event) => {
-        const button = event.target.closest('.Button--primary');
+        const button = (event.target as HTMLElement | null)?.closest('.Button--primary');
         if (!button) return;
 
         const rect = button.getBoundingClientRect();

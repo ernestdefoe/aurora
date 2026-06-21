@@ -1,8 +1,10 @@
-// @ts-nocheck — same transitional marker the rest of this extension uses.
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
+import type Mithril from 'mithril';
 
 import { PALETTES, applyPalette, loadStoredPalette, storePalette } from '../palettes';
+
+type TransFn = (key: string, params?: Record<string, unknown>) => Mithril.Children;
 
 /**
  * Gradient swatch button + popover that lets the visitor pick one of
@@ -14,20 +16,25 @@ import { PALETTES, applyPalette, loadStoredPalette, storePalette } from '../pale
  * route change.
  */
 export default class PaletteButton extends Component {
-  oninit(vnode) {
+  open: boolean = false;
+  current: string = loadStoredPalette();
+  onDocumentClick!: (e: MouseEvent) => void;
+  onKeydown!: (e: KeyboardEvent) => void;
+
+  oninit(vnode: Mithril.Vnode<Record<string, unknown>, this>) {
     super.oninit(vnode);
     this.open = false;
     this.current = loadStoredPalette();
 
-    this.onDocumentClick = (e) => {
+    this.onDocumentClick = (e: MouseEvent) => {
       if (!this.open) return;
-      if (this.element && !this.element.contains(e.target)) {
+      if (this.element && !this.element.contains(e.target as Node)) {
         this.open = false;
         m.redraw();
       }
     };
 
-    this.onKeydown = (e) => {
+    this.onKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && this.open) {
         this.open = false;
         m.redraw();
@@ -35,20 +42,20 @@ export default class PaletteButton extends Component {
     };
   }
 
-  oncreate(vnode) {
+  oncreate(vnode: Mithril.Vnode<Record<string, unknown>, this>) {
     super.oncreate(vnode);
     document.addEventListener('click', this.onDocumentClick, true);
     document.addEventListener('keydown', this.onKeydown);
   }
 
-  onremove(vnode) {
+  onremove(vnode: Mithril.Vnode<Record<string, unknown>, this>) {
     super.onremove(vnode);
     document.removeEventListener('click', this.onDocumentClick, true);
     document.removeEventListener('keydown', this.onKeydown);
   }
 
   view() {
-    const t = (key) => app.translator.trans(`ernestdefoe-aurora.forum.palette.${key}`);
+    const t = (key: string) => app.translator.trans(`ernestdefoe-aurora.forum.palette.${key}`);
 
     return (
       <button
@@ -56,7 +63,7 @@ export default class PaletteButton extends Component {
         className="AuroraPaletteButton"
         aria-label={t('button_label')}
         aria-expanded={this.open ? 'true' : 'false'}
-        onclick={(e) => {
+        onclick={(e: MouseEvent) => {
           e.stopPropagation();
           this.open = !this.open;
         }}
@@ -68,7 +75,7 @@ export default class PaletteButton extends Component {
     );
   }
 
-  popover(t) {
+  popover(t: TransFn) {
     return (
       <div className="AuroraPalettePopover" role="dialog">
         <p className="AuroraPalettePopover-title">{t('title')}</p>
@@ -86,7 +93,7 @@ export default class PaletteButton extends Component {
                 'ernestdefoe-aurora.forum.palette.apply',
                 { palette: this.localizedLabel(t, name, p.label) }
               )}
-              onclick={(e) => {
+              onclick={(e: MouseEvent) => {
                 e.stopPropagation();
                 applyPalette(name);
                 storePalette(name);
@@ -115,7 +122,7 @@ export default class PaletteButton extends Component {
    * locale doesn't have an entry for that palette — keeps custom
    * palettes addable without forcing a translation.
    */
-  localizedLabel(t, name, fallback) {
+  localizedLabel(t: TransFn, name: string, fallback: Mithril.Children) {
     const localized = t(name);
     // app.translator.trans returns the missing key verbatim when no
     // translation exists; detect that so we fall back to PALETTES.label.

@@ -1,4 +1,3 @@
-// @ts-nocheck — TODO: declare class properties + parameter types
 // Transitional marker from the audit-driven TS conversion. The
 // underlying JS uses Flarum's `this.foo = ...` initialiser pattern
 // which TypeScript strict mode rejects. Remove once a follow-up pass
@@ -6,7 +5,7 @@
 import Extend from 'flarum/common/extenders';
 import app from 'flarum/admin/app';
 
-const t = (key) => app.translator.trans(`ernestdefoe-aurora.admin.settings.${key}`, {}, true);
+const t = (key: string) => app.translator.trans(`ernestdefoe-aurora.admin.settings.${key}`, {}, true);
 
 export default [
     new Extend.Admin()

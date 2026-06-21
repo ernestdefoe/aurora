@@ -53,6 +53,11 @@ return [
     // hardcoded placeholder numbers (1284 / 8742 / 53901 / 142) the
     // audit flagged as misleading on freshly-installed forums.
     (new Extend\ApiResource(ForumResource::class))
+        // The fields() callback is invoked by core without arguments, and the
+        // per-attribute get() closure receives only ($model, Context) — neither
+        // is passed the container, and ApiResource has no constructor-injection
+        // hook for field getters. So resolving AuroraStats from the container
+        // here is the supported pattern, not a service-location smell.
         ->fields(fn () => [
             Schema\Arr::make('auroraStats')
                 ->get(fn () => resolve(AuroraStats::class)->snapshot()),

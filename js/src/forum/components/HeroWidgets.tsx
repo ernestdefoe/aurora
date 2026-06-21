@@ -1,4 +1,3 @@
-// @ts-nocheck — same transitional marker the rest of this extension uses.
 import app from 'flarum/forum/app';
 
 /**
@@ -16,10 +15,10 @@ import app from 'flarum/forum/app';
  * and have been removed entirely.
  */
 export default function heroWidgets() {
-  const stats = app.forum.attribute('auroraStats');
+  const stats = app.forum.attribute('auroraStats') as { users?: number; discussions?: number; posts?: number; online?: number } | null;
   if (!stats || typeof stats !== 'object') return null;
 
-  const t = (key) => app.translator.trans(`ernestdefoe-aurora.forum.widgets.${key}`);
+  const t = (key: string) => app.translator.trans(`ernestdefoe-aurora.forum.widgets.${key}`);
 
   const tiles = [
     { key: 'members',     count: stats.users,       label: t('members'),     icon: iconUsers() },
@@ -50,7 +49,7 @@ export default function heroWidgets() {
   );
 }
 
-function formatCount(n) {
+function formatCount(n: number | undefined) {
   const v = Number(n) || 0;
   if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
   if (v >= 10_000) return (v / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
@@ -62,7 +61,7 @@ function formatCount(n) {
 // (which used innerHTML); m.trust is safe here because the strings
 // are compile-time constants, NOT user input.
 
-function svg(inner) {
+function svg(inner: string) {
   return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 }
 
