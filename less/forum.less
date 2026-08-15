@@ -197,7 +197,7 @@ h1, h2, h3, h4 {
 
     &:hover {
         transform: translateY(-2px);
-        background: rgba(var(--aurora-surface-2-rgb), 0.7);
+        background: ~"rgba(var(--aurora-surface-2-rgb), 0.7)";
         border-color: var(--aurora-mist-3);
         box-shadow:
             0 12px 28px -12px fade(#000, 60%),
@@ -600,7 +600,7 @@ textarea {
         inset: 0;
         background:
             radial-gradient(60% 80% at 80% 0%, fade(#fff, 18%) 0%, transparent 60%),
-            radial-gradient(40% 60% at 0% 100%, rgba(var(--aurora-surface-0-rgb), 0.3) 0%, transparent 60%);
+            radial-gradient(40% 60% at 0% 100%, ~"rgba(var(--aurora-surface-0-rgb), 0.3)" 0%, transparent 60%);
         pointer-events: none;
     }
 
