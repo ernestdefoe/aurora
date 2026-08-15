@@ -41,14 +41,25 @@ jobs:
           set -euo pipefail
 
           # ---------------------------------------------------------------
-          # 1. Find the most recent published (non-draft) tag.
+          # 1. Find the most recent published (non-draft) tag ON THIS LINE.
+          #
+          # 🚨 This is the 1.x (Flarum 1.8) copy of the workflow, so it must
+          # only ever consider 1.x tags. Without the filter it picked the
+          # newest published release repo-wide — which is main's Flarum 2
+          # line — and drafted 4.0.0 off 3.0.1 for a Flarum 1 codebase.
+          # Publishing that would have burned 4.0.0 on Flarum 1 code
+          # permanently, since Packagist will not let a tag be moved.
+          # main's copy carries the mirror-image filter (it EXCLUDES 1.x).
           # ---------------------------------------------------------------
+          # startswith() rather than a regex: the pattern survives the
+          # YAML -> bash -> jq trip without backslash escaping.
           previous_tag=$(gh api "repos/${GH_REPO}/releases?per_page=100" \
-            --jq '[.[] | select(.draft == false) | .tag_name][0] // empty')
+            --jq '[.[] | select(.draft == false) | .tag_name | select(startswith("1.") or startswith("v1."))][0] // empty')
 
           if [ -z "$previous_tag" ]; then
-            # No published releases — fall back to the newest git tag if any.
-            previous_tag=$(gh api "repos/${GH_REPO}/tags?per_page=1" --jq '.[0].name // empty')
+            # No published releases on this line — fall back to git tags.
+            previous_tag=$(gh api "repos/${GH_REPO}/tags?per_page=100" \
+              --jq '[.[] | .name | select(startswith("1.") or startswith("v1."))][0] // empty')
           fi
 
           echo "Previous tag: ${previous_tag:-<none>}"
