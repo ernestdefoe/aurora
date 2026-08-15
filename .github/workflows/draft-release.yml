@@ -41,14 +41,26 @@ jobs:
           set -euo pipefail
 
           # ---------------------------------------------------------------
-          # 1. Find the most recent published (non-draft) tag.
+          # 1. Find the most recent published (non-draft) tag ON THIS LINE.
+          #
+          # 🚨 The repo maintains two release lines: main (Flarum 2, 2.x/3.x+)
+          # and the 1.x branch (Flarum 1.8). An unfiltered lookup takes the
+          # newest release repo-wide, so as soon as the 1.x line publishes
+          # (1.0.3) a push to main would bump 1.0.3 -> 1.0.4 and ship Flarum 2
+          # code under a Flarum 1 version number. Packagist will not let a tag
+          # move once ingested, so that is unrecoverable.
+          #
+          # This is main's copy, so it EXCLUDES the 1.x line. The 1.x copy
+          # carries the mirror-image filter. startswith() rather than a regex
+          # so the pattern survives YAML -> bash -> jq without escaping.
           # ---------------------------------------------------------------
           previous_tag=$(gh api "repos/${GH_REPO}/releases?per_page=100" \
-            --jq '[.[] | select(.draft == false) | .tag_name][0] // empty')
+            --jq '[.[] | select(.draft == false) | .tag_name | select((startswith("1.") or startswith("v1.")) | not)][0] // empty')
 
           if [ -z "$previous_tag" ]; then
-            # No published releases — fall back to the newest git tag if any.
-            previous_tag=$(gh api "repos/${GH_REPO}/tags?per_page=1" --jq '.[0].name // empty')
+            # No published releases on this line — fall back to git tags.
+            previous_tag=$(gh api "repos/${GH_REPO}/tags?per_page=100" \
+              --jq '[.[] | .name | select((startswith("1.") or startswith("v1.")) | not)][0] // empty')
           fi
 
           echo "Previous tag: ${previous_tag:-<none>}"
@@ -129,8 +141,15 @@ jobs:
           # ---------------------------------------------------------------
           # 4. Find an existing draft to update; otherwise create a new one.
           # ---------------------------------------------------------------
+          # 🚨 Only consider a draft that targets THIS branch. Unfiltered,
+          # the two release lines share one draft slot and clobber each
+          # other: main would PATCH the 1.x draft's tag to a Flarum 2
+          # version while leaving target_commitish on 1.x, so publishing it
+          # would tag Flarum 1 code as a Flarum 2 release.
           existing_draft_id=$(gh api "repos/${GH_REPO}/releases?per_page=100" \
-            --jq '[.[] | select(.draft == true)][0].id // empty')
+            --jq '[.[] | select(.draft == true)
+                       | select(.target_commitish == env.HEAD_REF
+                                or .target_commitish == "refs/heads/" + env.HEAD_REF)][0].id // empty')
 
           if [ -n "$existing_draft_id" ]; then
             echo "Updating existing draft ${existing_draft_id} → ${next_tag}"
