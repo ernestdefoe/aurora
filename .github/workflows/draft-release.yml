@@ -140,8 +140,15 @@ jobs:
           # ---------------------------------------------------------------
           # 4. Find an existing draft to update; otherwise create a new one.
           # ---------------------------------------------------------------
+          # 🚨 Only consider a draft that targets THIS branch. Unfiltered,
+          # the two release lines share one draft slot and clobber each
+          # other: main would PATCH this line's draft to a Flarum 2 version
+          # while leaving target_commitish on 1.x, so publishing it would
+          # tag Flarum 1 code as a Flarum 2 release.
           existing_draft_id=$(gh api "repos/${GH_REPO}/releases?per_page=100" \
-            --jq '[.[] | select(.draft == true)][0].id // empty')
+            --jq '[.[] | select(.draft == true)
+                       | select(.target_commitish == env.HEAD_REF
+                                or .target_commitish == "refs/heads/" + env.HEAD_REF)][0].id // empty')
 
           if [ -n "$existing_draft_id" ]; then
             echo "Updating existing draft ${existing_draft_id} → ${next_tag}"
