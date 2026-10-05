@@ -11,7 +11,7 @@
     border: 1px solid var(--aurora-mist-1);
 }
 
-.aurora-card {
+.aurora-card() {
     .aurora-glass();
     border-radius: @aurora-radius-md;
     box-shadow:
@@ -43,7 +43,7 @@
     animation: aurora-shimmer @duration linear infinite;
 }
 
-.aurora-text-gradient {
+.aurora-text-gradient() {
     background: @aurora-gradient;
     -webkit-background-clip: text;
             background-clip: text;
@@ -53,7 +53,7 @@
 
 // Focus ring uses the active surface color as its inner halo so the
 // ring stays visible against either theme.
-.aurora-focus-ring {
+.aurora-focus-ring() {
     outline: none;
     box-shadow:
         0 0 0 2px var(--aurora-surface-0),
