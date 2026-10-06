@@ -140,6 +140,10 @@ Need Flarum 1.x? Switch to the [`1.x`](https://github.com/ernestdefoe/aurora/tre
 branch — it targets `flarum/core ^1.8.0` and uses the legacy `app.extensionData`
 settings API.
 
+## Discuss
+
+Questions, ideas and release notes: [Aurora on discuss.flarum.org](https://discuss.flarum.org/d/39302-aurora).
+
 ## License
 
 [MIT](LICENSE) © Ernest Defoe
