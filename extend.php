@@ -18,14 +18,14 @@ use Flarum\Extend;
 
 return [
     (new Extend\Frontend('forum'))
-        ->css(__DIR__ . '/less/forum.less')
-        ->js(__DIR__ . '/js/dist/forum.js'),
+        ->css(__DIR__.'/less/forum.less')
+        ->js(__DIR__.'/js/dist/forum.js'),
 
     (new Extend\Frontend('admin'))
-        ->css(__DIR__ . '/less/admin.less')
-        ->js(__DIR__ . '/js/dist/admin.js'),
+        ->css(__DIR__.'/less/admin.less')
+        ->js(__DIR__.'/js/dist/admin.js'),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Settings())
         ->default('aurora-theme.primary_gradient_start', '#7c3aed')

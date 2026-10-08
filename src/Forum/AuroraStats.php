@@ -23,8 +23,8 @@ use Illuminate\Contracts\Cache\Repository as Cache;
  */
 class AuroraStats
 {
-    private const CACHE_KEY     = 'aurora-theme.stats';
-    private const TTL_SECONDS   = 60;
+    private const CACHE_KEY = 'aurora-theme.stats';
+    private const TTL_SECONDS = 60;
     private const ONLINE_WINDOW = 5;
 
     public function __construct(private Cache $cache)
