@@ -1,7 +1,7 @@
 vendor/
 composer.lock
 js/node_modules/
-js/package-lock.json
+js/coverage-ts/
 js/dist-typings/
 .idea/
 .vscode/
