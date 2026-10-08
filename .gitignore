@@ -7,3 +7,5 @@ js/dist-typings/
 .vscode/
 .DS_Store
 *.log
+.phpunit.result.cache
+/tests/integration/tmp
