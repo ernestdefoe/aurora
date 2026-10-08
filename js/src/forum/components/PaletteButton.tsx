@@ -84,15 +84,9 @@ export default class PaletteButton extends Component {
             <button
               key={name}
               type="button"
-              className={
-                'AuroraPaletteSwatch' +
-                (name === this.current ? ' AuroraPaletteSwatch--active' : '')
-              }
+              className={'AuroraPaletteSwatch' + (name === this.current ? ' AuroraPaletteSwatch--active' : '')}
               data-palette={name}
-              aria-label={app.translator.trans(
-                'ernestdefoe-aurora.forum.palette.apply',
-                { palette: this.localizedLabel(t, name, p.label) }
-              )}
+              aria-label={app.translator.trans('ernestdefoe-aurora.forum.palette.apply', { palette: this.localizedLabel(t, name, p.label) })}
               onclick={(e: MouseEvent) => {
                 e.stopPropagation();
                 applyPalette(name);
@@ -106,9 +100,7 @@ export default class PaletteButton extends Component {
                   background: `linear-gradient(120deg, ${p.c1} 0%, ${p.c2} 35%, ${p.c3} 70%, ${p.c4} 100%)`,
                 }}
               />
-              <span className="AuroraPaletteSwatch-label">
-                {this.localizedLabel(t, name, p.label)}
-              </span>
+              <span className="AuroraPaletteSwatch-label">{this.localizedLabel(t, name, p.label)}</span>
             </button>
           ))}
         </div>
@@ -127,8 +119,7 @@ export default class PaletteButton extends Component {
     // app.translator.trans returns the missing key verbatim when no
     // translation exists; detect that so we fall back to PALETTES.label.
     const key = `ernestdefoe-aurora.forum.palette.${name}`;
-    const looksMissing =
-      typeof localized === 'string' && localized === key;
+    const looksMissing = typeof localized === 'string' && localized === key;
     return looksMissing ? fallback : localized;
   }
 }

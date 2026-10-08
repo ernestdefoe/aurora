@@ -21,10 +21,10 @@ export default function heroWidgets() {
   const t = (key: string) => app.translator.trans(`ernestdefoe-aurora.forum.widgets.${key}`);
 
   const tiles = [
-    { key: 'members',     count: stats.users,       label: t('members'),     icon: iconUsers() },
+    { key: 'members', count: stats.users, label: t('members'), icon: iconUsers() },
     { key: 'discussions', count: stats.discussions, label: t('discussions'), icon: iconChat() },
-    { key: 'posts',       count: stats.posts,       label: t('posts'),       icon: iconMessage() },
-    { key: 'online',      count: stats.online,      label: t('online'),      icon: iconPulse() },
+    { key: 'posts', count: stats.posts, label: t('posts'), icon: iconMessage() },
+    { key: 'online', count: stats.online, label: t('online'), icon: iconPulse() },
   ];
 
   // Drop tiles where the count is null/undefined. A count of zero is
@@ -68,9 +68,9 @@ function svg(inner: string) {
 function iconUsers() {
   return svg(
     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>' +
-    '<circle cx="9" cy="7" r="4"/>' +
-    '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' +
-    '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
+      '<circle cx="9" cy="7" r="4"/>' +
+      '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' +
+      '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
   );
 }
 
