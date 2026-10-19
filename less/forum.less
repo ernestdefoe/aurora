@@ -127,6 +127,14 @@ h1, h2, h3, h4 {
     padding: 4px;
 }
 
+// The phone bar floats 16px down from the top of the window, so the page
+// (and the score ticker under the bar) started 16px behind it.
+@media @phone {
+    .App {
+        padding-top: calc(~'var(--header-height-phone) + 16px');
+    }
+}
+
 // ---------------------------------------------------------------------
 // Sidebar navigation
 // ---------------------------------------------------------------------
