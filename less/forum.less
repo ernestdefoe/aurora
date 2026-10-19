@@ -334,6 +334,16 @@ h1, h2, h3, h4 {
         margin-bottom: 18px;
         transition: border-color 0.25s @aurora-ease, transform 0.25s @aurora-ease;
         animation: aurora-fade-up 0.45s @aurora-ease both;
+        // The glass makes every post its own stacking context, so the
+        // author's user card (and the ⋯ menu) painted under the next post.
+        // Lift the post that holds one, as the discussion cards do.
+        position: relative;
+
+        &:hover,
+        &:focus-within,
+        &:has(.Dropdown.open, .UserCard--popover) {
+            z-index: 2;
+        }
 
         &:hover {
             border-color: var(--aurora-mist-3);
