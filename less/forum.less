@@ -207,8 +207,12 @@ h1, h2, h3, h4 {
     // When the per-item controls dropdown is open Flarum toggles
     // .open onto the .Dropdown wrapper; :focus-within is the belt-and-
     // suspenders fallback for browsers / states that miss the class.
+    // A hover card (Discussion Participants' user card, or any other
+    // popover opened from inside the card) has the same problem, and opens
+    // on hover — so the hovered card is lifted too.
+    &:hover,
     &:focus-within,
-    &:has(.Dropdown.open) {
+    &:has(.Dropdown.open, .UserCard--popover) {
         z-index: 10;
     }
 
